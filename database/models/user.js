@@ -5,7 +5,7 @@ const {UserSchema} = require('../schemas/user.js');
 
 /**
  * Format JSON response 
- * instance method running on a document
+ * instance method running on a document - this = user
  * @returns {Object} 
  */
 UserSchema.methods.toJSON = function () {
@@ -18,7 +18,7 @@ UserSchema.methods.toJSON = function () {
 
 /**
  * Generate authentication token 
- * instance method running on a document
+ * instance method running on a document - this = user
  * @returns {Promise} 
  */
 UserSchema.methods.generateAuthToken = function () {
@@ -33,8 +33,21 @@ UserSchema.methods.generateAuthToken = function () {
 };
 
 /**
+ * Delete authentication token
+ * instance method running on a document - this = user
+ * @param {*} token 
+ */
+UserSchema.methods.removeToken = function (token) {
+  return this.update({
+    $pull: {
+      tokens: {token}
+    }
+  });
+};
+
+/**
  * Find user by token
- * model method running on a model
+ * model method running on a model - this = User
  * @param {*} token 
  */
 UserSchema.statics.findByToken = function (token) {
@@ -55,7 +68,7 @@ UserSchema.statics.findByToken = function (token) {
 
 /**
  * Find user by credentials
- * model method running on a model
+ * model method running on a model - this = User
  * @param {email, password} 
  */
 UserSchema.statics.findByCredentials = function ({email, password}) {
@@ -74,7 +87,7 @@ UserSchema.statics.findByCredentials = function ({email, password}) {
 
 /**
  * Save hashed and salted password
- * middleware runs before every save event on a model instance
+ * middleware runs before every save event on a model instance - this = User
  */
 UserSchema.pre('save', function(next) {
   // run this middleware only if password in Schema was modified

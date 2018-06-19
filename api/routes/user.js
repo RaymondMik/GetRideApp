@@ -41,4 +41,11 @@ router.post('/login', (req, res) => {
     }).catch((err) => res.sendStatus(401));
 });
 
+// POST sign out (log out user)
+router.post('/me/logout', authenticate, (req, res) => {
+    req.user.removeToken(req.token).then(() => {
+        res.status(200).send('Logged out');
+    }).catch(() => res.status(401));
+});
+
 module.exports = router;

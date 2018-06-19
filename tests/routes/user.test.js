@@ -121,7 +121,7 @@ describe('POST /users/login', () => {
             .expect((res) => {
                 expect(res.headers['x-auth']).toBeFalsy();
             })
-            .end((err, res) => {
+            .end((err) => {
                 if (err) return done(err);
 
                 User.findById(users[1]._id).then((user) => {
@@ -129,5 +129,24 @@ describe('POST /users/login', () => {
                     done();
                 }).catch((e) => done(e)); 
             });
+    });
+});
+
+// POST sign out (logout user)
+describe('POST users/me/logout', () => {
+    test('should remove auth token on logout', (done) => {
+        request(app)
+            .post(`${URL_FRAGMENT}/me/logout`)
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .end((err) => {
+                if (err) return done(err);
+
+                User.findById(users[0]._id).then((user) => {
+                    expect(user.tokens.length).toBe(0);
+                    done();
+                }).catch((err) => done(err));
+            })
+
     });
 });
