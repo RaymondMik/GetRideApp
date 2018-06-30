@@ -2,15 +2,17 @@ const request = require('supertest');
 const {ObjectID} = require('mongodb');
 const {app} = require('./../../app.js');
 const {User} = require('./../../database/models/user.js');
-const {populateUsers, users} = require('./../databaseHandler.js');
+const {populateUsers, clearUsers, users} = require('./../databaseHandler.js');
 
 const URL_FRAGMENT = '/users';
 
 beforeEach(populateUsers);
+afterEach(clearUsers);
 
 // GET me user
 describe('GET users/me', () => {
     test('should return user if authenticated', (done) => {
+        console.log(33, users[0].tokens[0].token);
         request(app)
             .get(`${URL_FRAGMENT}/me`)
             .set('x-auth', users[0].tokens[0].token)

@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
 const RideRequestSchema = mongoose.Schema({
-    userId: { 
-        type: String, 
-        required: true, 
-        minlength: 1 
+    _creator: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        required: true
     },
     pickUp: { 
         type: Number, // Decimal Degrees ex.41.40338, 2.17403
