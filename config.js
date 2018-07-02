@@ -1,11 +1,12 @@
 const env = process.env.NODE_ENV || 'development';
 
-if (env === 'development') {
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/GetARideLocal';
-} 
+if (env === 'development'|| env === 'test') {
+  const configuration = require('./config.json');
 
-if (env === 'test') {
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/GetARideTest';
+  // assign process variables (PORT,  MONGODB_URI) according to object in config
+  for (let config in configuration[env]) {
+    if (configuration[env].hasOwnProperty(config)) {
+      process.env[config] = configuration[env][config]
+    }
+  }
 }
